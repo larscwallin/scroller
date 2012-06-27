@@ -1,6 +1,26 @@
 var ScrollerManager = {
-	scrollers:[]
-};
+	_scrollers:[],
+	_elements:[],
+	get:function(id){
+		if(id){		
+			return this._elements[id];
+		}else{
+			console.log('ScrollerManager.get(): Argument id was missing.');
+			return false;
+		}
+	},
+	add:function(obj){
+		if(obj instanceof EasyScroller){					
+			this._elements[obj.container.id] = obj;
+			this._scrollers.push(obj);		
+			return true;	
+		}else{
+			console.log('ScrollerManager.add(): Argument was not of type EasyScroller.');
+			return false;
+		}
+	}	
+}
+
 
 var EasyScroller = function(content, options) {
 	
@@ -208,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		var minZoom = zoomOptions.length > 1 && parseFloat(zoomOptions[0]);
 		var maxZoom = zoomOptions.length > 1 && parseFloat(zoomOptions[1]);
 
-		ScrollerManager.scrollers.push(new EasyScroller(element, {
+		ScrollerManager.add(new EasyScroller(element, {
 			scrollingX: scrollable === 'true' || scrollable === 'x',
 			scrollingY: scrollable === 'true' || scrollable === 'y',
 			zooming: zoomable === 'true' || zoomOptions.length > 1,

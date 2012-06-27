@@ -1,8 +1,14 @@
+var ScrollerManager = {
+	scrollers:[]
+};
+
 var EasyScroller = function(content, options) {
 	
 	this.content = content;
 	this.container = content.parentNode;
 	this.options = options || {};
+	this.suspended = false;	
+
 
 	// create Scroller instance
 	var that = this;
@@ -35,7 +41,7 @@ EasyScroller.prototype.render = (function() {
 	} else if (typeof navigator.cpuClass === 'string') {
 		engine = 'trident';
 	}
-	
+
 	var vendorPrefix = EasyScroller.vendorPrefix = {
 		trident: 'ms',
 		gecko: 'Moz',
@@ -145,6 +151,10 @@ EasyScroller.prototype.bindEvents = function() {
 			if (!mousedown) {
 				return;
 			}
+
+			if (that.suspended === true) {
+				return;
+			}
 			
 			that.scroller.doTouchMove([{
 				pageX: e.pageX,
@@ -185,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	for (var i = 0; i < elements.length; i++) {
 
 		element = elements[i];
-
+		
 		/*		
 				120527 Fix by ethanz5@github.com to support Android 2.3 uses element.attributes.getNamedItem to find element that specifies the 'data-scrollable' attribute.
 				github.com/zynga/scroller/pull/15
@@ -198,13 +208,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		var minZoom = zoomOptions.length > 1 && parseFloat(zoomOptions[0]);
 		var maxZoom = zoomOptions.length > 1 && parseFloat(zoomOptions[1]);
 
-		new EasyScroller(element, {
+		ScrollerManager.scrollers.push(new EasyScroller(element, {
 			scrollingX: scrollable === 'true' || scrollable === 'x',
 			scrollingY: scrollable === 'true' || scrollable === 'y',
 			zooming: zoomable === 'true' || zoomOptions.length > 1,
 			minZoom: minZoom,
 			maxZoom: maxZoom
-		});
+		}));
 
 	};
 

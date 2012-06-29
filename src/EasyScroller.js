@@ -1,9 +1,9 @@
 var ScrollerManager = {
 	_scrollers:[],
-	_elements:[],
+	_containers:[],
 	get:function(id){
 		if(id){		
-			return this._elements[id];
+			return this._containers[id];
 		}else{
 			console.log('ScrollerManager.get(): Argument id was missing.');
 			return false;
@@ -11,7 +11,7 @@ var ScrollerManager = {
 	},
 	add:function(obj){
 		if(obj instanceof EasyScroller){					
-			this._elements[obj.container.id] = obj;
+			if(obj.container.id) this._containers[obj.container.id] = obj;
 			this._scrollers.push(obj);		
 			return true;	
 		}else{
@@ -123,6 +123,10 @@ EasyScroller.prototype.bindEvents = function() {
 
 		this.container.addEventListener("touchstart", function(e) {
 
+			if (that.suspended === true) {
+				return;
+			}
+
 			// Don't react if initial down happens on a form element
 			if (e.touches[0] && e.touches[0].target && e.touches[0].target.tagName.match(/input|textarea|select/i)) {
 				return;
@@ -151,6 +155,10 @@ EasyScroller.prototype.bindEvents = function() {
 		var mousedown = false;
 
 		this.container.addEventListener("mousedown", function(e) {
+		
+			if (that.suspended === true) {
+				return;
+			}
 
 			if (e.target.tagName.match(/input|textarea|select/i)) {
 				return;
@@ -169,10 +177,6 @@ EasyScroller.prototype.bindEvents = function() {
 		document.addEventListener("mousemove", function(e) {
 
 			if (!mousedown) {
-				return;
-			}
-
-			if (that.suspended === true) {
 				return;
 			}
 			

@@ -19,7 +19,7 @@ var ScrollerManager = {
 			return false;
 		}
 	}	
-}
+};
 
 
 var EasyScroller = function(content, options) {
@@ -240,6 +240,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			maxZoom: maxZoom
 		}));
 
-	};
+	}
 
 }, false);
